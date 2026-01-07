@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Усі оцінки студентів</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        .edit-link {
+            color: #4CAF50;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .edit-link:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .delete-link {
+            color: #f44336;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid #f44336;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 14px;
+            transition: all 0.2s;
+            margin-left: 5px;
+        }
+        .delete-link:hover {
+            background-color: #f44336;
+            color: white;
+        }
+        .actions-cell {
+            white-space: nowrap;
+        }
+        .flash-messages {
+            margin-bottom: 20px;
+        }
+        .flash-message {
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .flash-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .flash-error {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+    <script>
+        function confirmDelete(gradeId, studentName, courseTitle, gradeValue) {
+            const gradeDisplay = gradeValue !== null && gradeValue !== undefined ? gradeValue : '-';
+            const message = `Ви впевнені, що хочете видалити оцінку?\n\nСтудент: ${studentName}\nДисципліна: ${courseTitle}\nОцінка: ${gradeDisplay}\n\nЦю дію неможливо скасувати!`;
+            if (confirm(message)) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/delete_grade/${gradeId}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Усі оцінки студентів</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+        <a href="{{ url_for('average_grades') }}">Середні бали</a>
+        <a href="{{ url_for('ects_grades') }}">ECTS по дисциплінах</a>
+        <a href="{{ url_for('ects_students') }}">ECTS по студентах</a>
+        <a href="{{ url_for('add_grade') }}" style="background-color: #4CAF50; color: white;">+ Додати оцінку</a>
+    </div>
+    {% if grades %}
+    <table>
+        <thead>
+            <tr>
+                <th>Студент</th>
+                <th>Дисципліна</th>
+                <th>Семестр</th>
+                <th>Оцінка</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+            <tr>
+                <td>{{ grade[1] }}</td>
+                <td>{{ grade[2] }}</td>
+                <td>{{ grade[3] }}</td>
+                <td>{{ grade[4] if grade[4] is not none else '-' }}</td>
+                <td class="actions-cell">
+                    <a href="{{ url_for('edit_grade', grade_id=grade[0]) }}" class="edit-link">
+                        Редагувати
+                    </a>
+                    <a href="#" onclick="confirmDelete({{ grade[0] }}, '{{ grade[1]|replace("'", "\\'") }}', '{{ grade[2]|replace("'", "\\'") }}', {% if grade[4] is not none %}{{ grade[4] }}{% else %}null{% endif %}); return false;" class="delete-link">
+                        Видалити
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає жодних оцінок у базі даних.</p>
+    </div>
+    {% endif %}
+</body>
+</html>

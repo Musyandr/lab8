@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Форма користувача</title>
+</head>
+<body>
+
+    <h2>Форма введення даних</h2>
+
+{% if errors %}
+<ul style="color: red;">
+    {% for error in errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+    <form action="/form" method="post">
+        <label for="name">Ім'я:</label><br>
+        <input type="text" id="name" name="name" value="{{ name }}" placeholder="Введіть ім'я"><br><br>
+
+        <label for="email">Електронна пошта:</label><br>
+        <input type="email" id="email" name="email" value="{{ email }}" placeholder="example@email.com"><br><br>
+
+        <label for="age">Вік:</label><br>
+        <input type="number" id="age" name="age" value="{{ age }}" min="1"><br><br>
+
+        <label for="comment">Коментар:</label><br>
+        <textarea id="comment" name="comment" rows="4" cols="30">{{ comment }}</textarea><br><br>
+
+        <input type="submit" value="Надіслати">
+    </form>
+
+</body>
+</html>

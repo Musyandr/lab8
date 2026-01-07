@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Внесення нової оцінки</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: bold;
+        }
+        select, input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .error-list {
+            background-color: #ffebee;
+            border: 1px solid #d32f2f;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .error-list ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .error-list li {
+            color: #d32f2f;
+            margin-bottom: 5px;
+        }
+        .btn-save {
+            background-color: #e0e0e0;
+            color: #333;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-save:hover {
+            background-color: #d0d0d0;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #9c27b0;
+            text-decoration: underline;
+        }
+        .back-link:hover {
+            color: #7b1fa2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Внесення нової оцінки</h1>
+    <div class="form-container">
+        {% if errors %}
+        <div class="error-list">
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('add_grade') }}">
+            <div class="form-group">
+                <label for="student_id">Студент:</label>
+                <select id="student_id" name="student_id" required>
+                    <option value="">-- Оберіть студента --</option>
+                    {% for student in students %}
+                    <option value="{{ student[0] }}" {% if student_id and student[0]|string == student_id|string %}selected{% endif %}>
+                        {{ student[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="course_id">Дисципліна:</label>
+                <select id="course_id" name="course_id" required>
+                    <option value="">-- Оберіть дисципліну --</option>
+                    {% for course in courses %}
+                    <option value="{{ course[0] }}" {% if course_id and course[0]|string == course_id|string %}selected{% endif %}>
+                        {{ course[1] }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="grade">Оцінка:</label>
+                <input type="number" id="grade" name="grade" min="0" max="100" 
+                       value="{% if grade %}{{ grade }}{% endif %}" required>
+            </div>
+            
+            <button type="submit" class="btn-save">Зберегти</button>
+        </form>
+        
+        <a href="{{ url_for('points') }}" class="back-link">← Назад</a>
+    </div>
+</body>
+</html>
+
+

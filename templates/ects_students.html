@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECTS оцінки по студентах та семестрах</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .ects-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ects-info h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .ects-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .ects-info li {
+            padding: 5px 0;
+            color: #666;
+        }
+        .student-section {
+            background-color: white;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .student-header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .student-header a {
+            color: white;
+            text-decoration: none;
+        }
+        .student-header a:hover {
+            text-decoration: underline;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f5f5f5;
+            color: #333;
+            font-weight: bold;
+        }
+        td:first-child, th:first-child {
+            text-align: left;
+            padding-left: 20px;
+        }
+        tr:hover {
+            background-color: #f9f9f9;
+        }
+        .semester-row {
+            background-color: #fafafa;
+        }
+        .ects-A {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-B {
+            background-color: #8BC34A;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-C {
+            background-color: #FFC107;
+            color: #333;
+            font-weight: bold;
+        }
+        .ects-D {
+            background-color: #FF9800;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-E {
+            background-color: #FF5722;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-F {
+            background-color: #F44336;
+            color: white;
+            font-weight: bold;
+        }
+        .count-cell {
+            font-weight: bold;
+        }
+        .semester-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>ECTS оцінки по студентах та семестрах</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+        <a href="{{ url_for('average_grades') }}">Середні бали</a>
+        <a href="{{ url_for('ects_grades') }}">ECTS по дисциплінах</a>
+        <a href="{{ url_for('ects_students') }}">ECTS по студентах</a>
+        <a href="{{ url_for('add_grade') }}">Додати оцінку</a>
+    </div>
+    
+    <div class="ects-info">
+        <h2>Шкала ECTS:</h2>
+        <ul>
+            <li><strong>A</strong> (відмінно) - 90-100 балів</li>
+            <li><strong>B</strong> (дуже добре) - 82-89 балів</li>
+            <li><strong>C</strong> (добре) - 74-81 балів</li>
+            <li><strong>D</strong> (задовільно) - 65-73 бали</li>
+            <li><strong>E</strong> (достатньо) - 60-64 бали</li>
+            <li><strong>F</strong> (незадовільно) - 0-59 балів</li>
+        </ul>
+    </div>
+    
+    {% if students_data %}
+    {% for student in students_data %}
+    <div class="student-section">
+        <div class="student-header">
+            <a href="{{ url_for('student_grades', student_id=student.id) }}">{{ student.name }}</a>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>Семестр</th>
+                    <th class="ects-A">A</th>
+                    <th class="ects-B">B</th>
+                    <th class="ects-C">C</th>
+                    <th class="ects-D">D</th>
+                    <th class="ects-E">E</th>
+                    <th class="ects-F">F</th>
+                    <th>Всього</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for semester in student.semesters %}
+                <tr class="semester-row">
+                    <td class="semester-label">Семестр {{ semester.number }}</td>
+                    <td class="count-cell">{{ semester.stats.A }}</td>
+                    <td class="count-cell">{{ semester.stats.B }}</td>
+                    <td class="count-cell">{{ semester.stats.C }}</td>
+                    <td class="count-cell">{{ semester.stats.D }}</td>
+                    <td class="count-cell">{{ semester.stats.E }}</td>
+                    <td class="count-cell">{{ semester.stats.F }}</td>
+                    <td class="count-cell"><strong>{{ semester.stats.total }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає оцінок у базі даних.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+

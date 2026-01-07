@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оцінки студента {{ student_name }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Оцінки студента: {{ student_name }}</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+    </div>
+    {% if grades %}
+    <table>
+        <thead>
+            <tr>
+                <th>Дисципліна</th>
+                <th>Семестр</th>
+                <th>Оцінка</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for grade in grades %}
+            <tr>
+                <td>{{ grade[0] }}</td>
+                <td>{{ grade[1] }}</td>
+                <td>{{ grade[2] if grade[2] is not none else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">
+        <p>У студента {{ student_name }} поки що немає оцінок.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+
+

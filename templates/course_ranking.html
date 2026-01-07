@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рейтинг за дисципліною {{ course_title }}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .course-info {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .rank {
+            font-weight: bold;
+            color: #4CAF50;
+            width: 60px;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Рейтинг за дисципліною: {{ course_title }}</h1>
+    <div class="course-info">Семестр {{ course_semester }}</div>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+    </div>
+    {% if rankings %}
+    <table>
+        <thead>
+            <tr>
+                <th class="rank">Місце</th>
+                <th>Студент</th>
+                <th>Бал</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ranking in rankings %}
+            <tr>
+                <td class="rank">{{ loop.index }}</td>
+                <td><a href="{{ url_for('student_grades', student_id=ranking[0]) }}">{{ ranking[1] }}</a></td>
+                <td>{{ ranking[2] if ranking[2] is not none else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає оцінок за дисципліною {{ course_title }}.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+
+

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Середні бали по дисциплінах</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .avg-grade {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .no-grades {
+            color: #999;
+            font-style: italic;
+        }
+        .count-grades {
+            color: #666;
+            font-size: 14px;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Середні бали по дисциплінах</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+        <a href="{{ url_for('average_grades') }}">Середні бали</a>
+        <a href="{{ url_for('ects_grades') }}">ECTS по дисциплінах</a>
+        <a href="{{ url_for('ects_students') }}">ECTS по студентах</a>
+        <a href="{{ url_for('add_grade') }}">Додати оцінку</a>
+    </div>
+    {% if averages %}
+    <table>
+        <thead>
+            <tr>
+                <th>Дисципліна</th>
+                <th>Семестр</th>
+                <th>Середній бал</th>
+                <th>Кількість оцінок</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for avg in averages %}
+            <tr>
+                <td>{{ avg[0] }}</td>
+                <td>{{ avg[1] }}</td>
+                <td class="avg-grade">
+                    {% if avg[2] is not none %}
+                        {{ avg[2] }}
+                    {% else %}
+                        <span class="no-grades">Немає оцінок</span>
+                    {% endif %}
+                </td>
+                <td class="count-grades">{{ avg[3] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає дисциплін у базі даних.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+

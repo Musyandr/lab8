@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список дисциплін</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        li {
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        li:last-child {
+            border-bottom: none;
+        }
+        li:hover {
+            background-color: #f5f5f5;
+        }
+        a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .semester {
+            color: #666;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Список дисциплін</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+        <a href="{{ url_for('average_grades') }}">Середні бали</a>
+        <a href="{{ url_for('ects_grades') }}">ECTS по дисциплінах</a>
+        <a href="{{ url_for('ects_students') }}">ECTS по студентах</a>
+    </div>
+    {% if courses %}
+    <ul>
+        {% for course in courses %}
+        <li>
+            <a href="{{ url_for('course_ranking', course_id=course[0]) }}">{{ course[1] }}</a>
+            <span class="semester">(Семестр {{ course[2] }})</span>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає жодних дисциплін у базі даних.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+

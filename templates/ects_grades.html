@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оцінки за шкалою ECTS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .nav-links a {
+            color: #4CAF50;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 8px 16px;
+            border: 1px solid #4CAF50;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .nav-links a:hover {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .ects-info {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .ects-info h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 18px;
+        }
+        .ects-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0 0;
+        }
+        .ects-info li {
+            padding: 5px 0;
+            color: #666;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        td:first-child, th:first-child {
+            text-align: left;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        .ects-A {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-B {
+            background-color: #8BC34A;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-C {
+            background-color: #FFC107;
+            color: #333;
+            font-weight: bold;
+        }
+        .ects-D {
+            background-color: #FF9800;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-E {
+            background-color: #FF5722;
+            color: white;
+            font-weight: bold;
+        }
+        .ects-F {
+            background-color: #F44336;
+            color: white;
+            font-weight: bold;
+        }
+        .count-cell {
+            font-weight: bold;
+        }
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-size: 18px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Підрахунок оцінок за шкалою ECTS по дисциплінах</h1>
+    <div class="nav-links">
+        <a href="{{ url_for('points') }}">Всі оцінки</a>
+        <a href="{{ url_for('students') }}">Студенти</a>
+        <a href="{{ url_for('courses') }}">Дисципліни</a>
+        <a href="{{ url_for('average_grades') }}">Середні бали</a>
+        <a href="{{ url_for('ects_grades') }}">ECTS по дисциплінах</a>
+        <a href="{{ url_for('ects_students') }}">ECTS по студентах</a>
+        <a href="{{ url_for('add_grade') }}">Додати оцінку</a>
+    </div>
+    
+    <div class="ects-info">
+        <h2>Шкала ECTS:</h2>
+        <ul>
+            <li><strong>A</strong> (відмінно) - 90-100 балів</li>
+            <li><strong>B</strong> (дуже добре) - 82-89 балів</li>
+            <li><strong>C</strong> (добре) - 74-81 балів</li>
+            <li><strong>D</strong> (задовільно) - 65-73 бали</li>
+            <li><strong>E</strong> (достатньо) - 60-64 бали</li>
+            <li><strong>F</strong> (незадовільно) - 0-59 балів</li>
+        </ul>
+    </div>
+    
+    {% if ects_data %}
+    <table>
+        <thead>
+            <tr>
+                <th>Дисципліна</th>
+                <th>Семестр</th>
+                <th class="ects-A">A</th>
+                <th class="ects-B">B</th>
+                <th class="ects-C">C</th>
+                <th class="ects-D">D</th>
+                <th class="ects-E">E</th>
+                <th class="ects-F">F</th>
+                <th>Всього</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for course in ects_data %}
+            <tr>
+                <td><a href="{{ url_for('course_ranking', course_id=course.id) }}">{{ course.title }}</a></td>
+                <td>{{ course.semester }}</td>
+                <td class="count-cell">{{ course.A }}</td>
+                <td class="count-cell">{{ course.B }}</td>
+                <td class="count-cell">{{ course.C }}</td>
+                <td class="count-cell">{{ course.D }}</td>
+                <td class="count-cell">{{ course.E }}</td>
+                <td class="count-cell">{{ course.F }}</td>
+                <td class="count-cell"><strong>{{ course.total }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="no-data">
+        <p>Поки що немає дисциплін у базі даних.</p>
+    </div>
+    {% endif %}
+</body>
+</html>
+
