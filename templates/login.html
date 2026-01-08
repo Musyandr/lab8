@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Вхід у систему</title>
+    <style>
+        .error { color: red; }
+        .flash { padding: 10px; background: #e1f5fe; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <h2>Вхід адміністратора</h2>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+        <div>
+            <label>Логін:</label>
+            <input type="text" name="username" required>
+        </div>
+        <br>
+        <div>
+            <label>Пароль:</label>
+            <input type="password" name="password" required>
+        </div>
+        <br>
+        <button type="submit">Увійти</button>
+    </form>
+</body>
+</html>

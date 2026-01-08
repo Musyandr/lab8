@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Електронний журнал</title>
+</head>
+<body>
+    <h1>Головна сторінка журналу</h1>
+    
+    {% if user %}
+        <p>Ви увійшли як: <strong>{{ user.username }}</strong> | <a href="/logout">Вийти</a></p>
+    {% else %}
+        <p><a href="/login">Увійти в систему</a></p>
+    {% endif %}
+
+    <nav>
+        <ul>
+            <li><a href="/points">Оцінки</a></li>
+            <li><a href="/students">Студенти</a></li>
+            <li><a href="/courses">Курси</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
